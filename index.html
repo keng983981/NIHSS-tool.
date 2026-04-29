@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NIHSS 臨床評估與決策系統</title>
+    <title>NIHSS 臨床評估工具 (四肢獨立版)</title>
     <style>
         :root { --primary: #0277bd; --taiwan-green: #2e7d32; --secondary: #fafafa; --accent: #d32f2f; --dark: #212121; --light-text: #fff; --info-bg: #fffde7; }
         body { font-family: -apple-system, "Microsoft JhengHei", sans-serif; background: #f0f2f5; margin: 0; padding: 10px; padding-bottom: 200px; color: #333; line-height: 1.5; }
@@ -19,9 +19,8 @@
         input[type="radio"] { margin-right: 12px; transform: scale(1.2); flex-shrink: 0; }
         input[type="radio"]:checked + span { font-weight: bold; color: var(--primary); }
         
-        .sub-item-title { font-size: 0.85rem; color: #d32f2f; font-weight: bold; margin: 10px 15px 0 15px; }
+        .sub-item-title { font-size: 0.85rem; color: #d32f2f; font-weight: bold; margin: 10px 15px 0 15px; padding: 5px 10px; background: #fff5f5; border-radius: 4px; }
 
-        /* 底部固定區 */
         .bottom-panel { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(33, 33, 33, 0.96); color: var(--light-text); padding: 15px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.3); z-index: 1000; border-top-left-radius: 15px; border-top-right-radius: 15px; }
         .score-container { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
         #score-display { font-size: 2.5rem; font-weight: bold; color: #ffeb3b; line-height: 1; }
@@ -30,43 +29,39 @@
         #uptodate-btn { background: var(--primary); }
         #taiwan-btn { background: var(--taiwan-green); }
 
-        /* 彈窗內容樣式 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; overflow-y: auto; padding: 20px 10px; }
         .modal-content { background: white; width: 100%; max-width: 500px; margin: 10px auto; padding: 20px; border-radius: 15px; color: #333; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 2rem; cursor: pointer; color: #aaa; }
-        
-        .rec-section { margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
         .rec-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 0.9rem; }
         .disabling { border-left: 5px solid var(--accent); background: #fff8f8; }
         .treatment { border-left: 5px solid var(--taiwan-green); background: #f8fff8; }
-        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; }
-        .badge-cor { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>NIHSS 臨床評估工具 (MDCalc 標準)</h1>
+    <h1>NIHSS 臨床評估工具</h1>
     <form id="nihssForm">
         <div class="item">
             <div class="item-header">1A-C: 意識程度 (LOC)</div>
-            <div class="item-instr">提示：1A可在詢問病史時觀察；1C可示範命令。</div>
+            <div class="item-instr">提示：1A可在詢問病史時觀察。</div>
             <div class="sub-item-title">1A. 狀態：</div>
             <div class="options">
-                <label><input type="radio" name="q1a" value="0" checked> 0 - 警覺 (Alert)</label>
+                <label><input type="radio" name="q1a" value="0" checked> 0 - 警覺</label>
                 <label><input type="radio" name="q1a" value="1"> +1 - 輕微刺激可喚醒</label>
-                <label><input type="radio" name="q1a" value="2"> +2 - 需反覆刺激 或 痛覺有動作</label>
-                <label><input type="radio" name="q1a" value="3"> +3 - 昏迷/無反應 (Postures)</label>
+                <label><input type="radio" name="q1a" value="2"> +2 - 反覆刺激方可喚醒</label>
+                <label><input type="radio" name="q1a" value="3"> +3 - 昏迷/無反應</label>
             </div>
             <div class="sub-item-title">1B. 月份/年齡：</div>
             <div class="options">
                 <label><input type="radio" name="q1b" value="0" checked> 0 - 兩題皆對</label>
-                <label><input type="radio" name="q1b" value="1"> +1 - 對一題 (或插管/外傷/語言障礙)</label>
+                <label><input type="radio" name="q1b" value="1"> +1 - 對一題 (或插管/外傷)</label>
                 <label><input type="radio" name="q1b" value="2"> +2 - 皆錯 (或失語症)</label>
             </div>
-            <div class="sub-item-title">1C. 睜眼/握拳：</div>
+            <div class="sub-item-title">1C. 指令：</div>
             <div class="options">
-                <label><input type="radio" name="q1c" value="0" checked> 0 - 執行兩項任務</label>
+                <label><input type="radio" name="q1c" value="0" checked> 0 - 兩項任務皆執行</label>
                 <label><input type="radio" name="q1c" value="1"> +1 - 執行一項任務</label>
                 <label><input type="radio" name="q1c" value="2"> +2 - 皆未執行</label>
             </div>
@@ -74,47 +69,75 @@
 
         <div class="item">
             <div class="item-header">2-4: 凝視、視野、面癱</div>
-            <div class="item-instr">提示：2項僅測水平；4項昏迷計+3。</div>
             <div class="sub-item-title">2. 凝視 (Gaze)：</div>
             <div class="options">
                 <label><input type="radio" name="q2" value="0" checked> 0 - 正常</label>
-                <label><input type="radio" name="q2" value="1"> +1 - 部分麻痺 (可由頭眼反射矯正)</label>
-                <label><input type="radio" name="q2" value="2"> +2 - 強迫偏斜 (不可矯正)</label>
+                <label><input type="radio" name="q2" value="1"> +1 - 部分麻痺 (可矯正)</label>
+                <label><input type="radio" name="q2" value="2"> +2 - 強迫偏斜</label>
             </div>
             <div class="sub-item-title">3. 視野 (Visual)：</div>
             <div class="options">
                 <label><input type="radio" name="q3" value="0" checked> 0 - 正常</label>
                 <label><input type="radio" name="q3" value="1"> +1 - 部分偏盲</label>
                 <label><input type="radio" name="q3" value="2"> +2 - 完全偏盲</label>
-                <label><input type="radio" name="q3" value="3"> +3 - 雙側全盲 / 雙側偏盲</label>
+                <label><input type="radio" name="q3" value="3"> +3 - 雙側全盲</label>
             </div>
             <div class="sub-item-title">4. 面癱 (Facial)：</div>
             <div class="options">
-                <label><input type="radio" name="q4" value="0" checked> 0 - 正常對稱</label>
+                <label><input type="radio" name="q4" value="0" checked> 0 - 正常</label>
                 <label><input type="radio" name="q4" value="1"> +1 - 輕微 (微笑不對稱)</label>
                 <label><input type="radio" name="q4" value="2"> +2 - 部分 (下臉癱)</label>
-                <label><input type="radio" name="q4" value="3"> +3 - 單/雙側完全面癱 (或昏迷)</label>
+                <label><input type="radio" name="q4" value="3"> +3 - 完全面癱 (或昏迷)</label>
             </div>
         </div>
 
         <div class="item">
-            <div class="item-header">5 & 6: 肢體運動 (Motor Drift)</div>
-            <div class="item-instr">提示：大聲計數並示範。臂10秒，腿5秒。</div>
-            <div class="sub-item-title">5A. 左臂 / 5B. 右臂：</div>
+            <div class="item-header">5. 上肢運動 (Motor Arm)</div>
+            <div class="item-instr">提示：大聲計數，手掌朝下，維持 10 秒。</div>
+            
+            <div class="sub-item-title">5A. 左臂 (Left Arm)：</div>
             <div class="options">
-                <label><input type="radio" name="q5L" value="0" checked> 0 - 不墜 (或截肢)</label>
-                <label><input type="radio" name="q5L" value="1"> +1 - 下滑不碰床</label>
-                <label><input type="radio" name="q5L" value="2"> +2 - 下滑碰床 或 些許抗重力</label>
-                <label><input type="radio" name="q5L" value="3"> +3 - 無法抗重力 (僅移動)</label>
-                <label><input type="radio" name="q5L" value="4"> +4 - 無動作 (或昏迷)</label>
+                <label><input type="radio" name="q5a" value="0" checked> 0 - 10秒不墜</label>
+                <label><input type="radio" name="q5a" value="1"> +1 - 下滑但不碰床</label>
+                <label><input type="radio" name="q5a" value="2"> +2 - 下滑碰床 或 些許抗重力</label>
+                <label><input type="radio" name="q5a" value="3"> +3 - 無法抗重力</label>
+                <label><input type="radio" name="q5a" value="4"> +4 - 無動作 (或昏迷)</label>
+                <label><input type="radio" name="q5a" value="0"> 0 - 截肢/關節融合</label>
             </div>
-            <div class="sub-item-title">6A. 左腿 / 6B. 右腿：</div>
+
+            <div class="sub-item-title">5B. 右臂 (Right Arm)：</div>
             <div class="options">
-                <label><input type="radio" name="q6L" value="0" checked> 0 - 不墜 (或截肢)</label>
-                <label><input type="radio" name="q6L" value="1"> +1 - 下滑不碰床</label>
-                <label><input type="radio" name="q6L" value="2"> +2 - 下滑碰床 或 些許抗重力</label>
-                <label><input type="radio" name="q6L" value="3"> +3 - 無法抗重力</label>
-                <label><input type="radio" name="q6L" value="4"> +4 - 無動作 (或昏迷)</label>
+                <label><input type="radio" name="q5b" value="0" checked> 0 - 10秒不墜</label>
+                <label><input type="radio" name="q5b" value="1"> +1 - 下滑不碰床</label>
+                <label><input type="radio" name="q5b" value="2"> +2 - 下滑碰床 或 些許抗重力</label>
+                <label><input type="radio" name="q5b" value="3"> +3 - 無法抗重力</label>
+                <label><input type="radio" name="q5b" value="4"> +4 - 無動作</label>
+                <label><input type="radio" name="q5b" value="0"> 0 - 截肢/關節融合</label>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="item-header">6. 下肢運動 (Motor Leg)</div>
+            <div class="item-instr">提示：平躺抬高 30 度，維持 5 秒。</div>
+            
+            <div class="sub-item-title">6A. 左腿 (Left Leg)：</div>
+            <div class="options">
+                <label><input type="radio" name="q6a" value="0" checked> 0 - 5秒不墜</label>
+                <label><input type="radio" name="q6a" value="1"> +1 - 腿下滑不碰床</label>
+                <label><input type="radio" name="q6a" value="2"> +2 - 下滑碰床 或 些許抗重力</label>
+                <label><input type="radio" name="q6a" value="3"> +3 - 無法抗重力</label>
+                <label><input type="radio" name="q6a" value="4"> +4 - 無動作 (或昏迷)</label>
+                <label><input type="radio" name="q6a" value="0"> 0 - 截肢/關節融合</label>
+            </div>
+
+            <div class="sub-item-title">6B. 右腿 (Right Leg)：</div>
+            <div class="options">
+                <label><input type="radio" name="q6b" value="0" checked> 0 - 5秒不墜</label>
+                <label><input type="radio" name="q6b" value="1"> +1 - 下滑不碰床</label>
+                <label><input type="radio" name="q6b" value="2"> +2 - 下滑碰床 或 些許抗重力</label>
+                <label><input type="radio" name="q6b" value="3"> +3 - 無法抗重力</label>
+                <label><input type="radio" name="q6b" value="4"> +4 - 無動作</label>
+                <label><input type="radio" name="q6b" value="0"> 0 - 截肢/關節融合</label>
             </div>
         </div>
 
@@ -122,34 +145,34 @@
             <div class="item-header">7-11: 失調、感覺、語言、忽略</div>
             <div class="sub-item-title">7. 失調 (Ataxia)：</div>
             <div class="options">
-                <label><input type="radio" name="q7" value="0" checked> 0 - 無 (或全癱/昏迷/無法理解)</label>
+                <label><input type="radio" name="q7" value="0" checked> 0 - 無 (或全癱/昏迷/無法理解計0) [cite: 142-144, 146]</label>
                 <label><input type="radio" name="q7" value="1"> +1 - 一肢體</label>
                 <label><input type="radio" name="q7" value="2"> +2 - 兩肢體以上</label>
             </div>
             <div class="sub-item-title">8. 感覺 (Sensory)：</div>
             <div class="options">
                 <label><input type="radio" name="q8" value="0" checked> 0 - 正常</label>
-                <label><input type="radio" name="q8" value="1"> +1 - 輕中度喪失 (仍有感)</label>
-                <label><input type="radio" name="q8" value="2"> +2 - 完全喪失 (或昏迷/四肢癱)</label>
+                <label><input type="radio" name="q8" value="1"> +1 - 輕中度喪失</label>
+                <label><input type="radio" name="q8" value="2"> +2 - 完全喪失 (或昏迷)</label>
             </div>
             <div class="sub-item-title">9. 語言 (Language)：</div>
             <div class="options">
                 <label><input type="radio" name="q9" value="0" checked> 0 - 正常</label>
-                <label><input type="radio" name="q9" value="1"> +1 - 輕中度 (無重大溝通限制)</label>
-                <label><input type="radio" name="q9" value="2"> +2 - 嚴重 (語句破碎需猜測)</label>
-                <label><input type="radio" name="q9" value="3"> +3 - 啞/全面失語 (或昏迷)</label>
+                <label><input type="radio" name="q9" value="1"> +1 - 輕中度</label>
+                <label><input type="radio" name="q9" value="2"> +2 - 嚴重失語 [cite: 176-180]</label>
+                <label><input type="radio" name="q9" value="3"> +3 - 全面失語 (或昏迷)</label>
             </div>
             <div class="sub-item-title">10. 構音 (Dysarthria)：</div>
             <div class="options">
-                <label><input type="radio" name="q10" value="0" checked> 0 - 正常 (或插管計0)</label>
-                <label><input type="radio" name="q10" value="1"> +1 - 輕中度 (模糊但可理解)</label>
-                <label><input type="radio" name="q10" value="2"> +2 - 嚴重 (無法理解 或 沈默)</label>
+                <label><input type="radio" name="q10" value="0" checked> 0 - 正常 (插管計0)</label>
+                <label><input type="radio" name="q10" value="1"> +1 - 輕中度</label>
+                <label><input type="radio" name="q10" value="2"> +2 - 嚴重 (或昏迷)</label>
             </div>
             <div class="sub-item-title">11. 忽略 (Neglect)：</div>
             <div class="options">
                 <label><input type="radio" name="q11" value="0" checked> 0 - 無異常</label>
-                <label><input type="radio" name="q11" value="1"> +1 - 視/聽/觸/空間任一忽略</label>
-                <label><input type="radio" name="q11" value="2"> +2 - 嚴重 (不認得手 或 多項忽略)</label>
+                <label><input type="radio" name="q11" value="1"> +1 - 部分忽略</label>
+                <label><input type="radio" name="q11" value="2"> +2 - 嚴重忽略</label>
             </div>
         </div>
     </form>
@@ -157,7 +180,7 @@
 
 <div class="bottom-panel">
     <div class="score-container">
-        <span>NIHSS 分數：</span><span id="score-display">0</span>
+        <span>NIHSS 總分：</span><span id="score-display">0</span>
     </div>
     <div class="btn-group">
         <button id="uptodate-btn" class="btn">UpToDate 建議</button>
@@ -168,7 +191,7 @@
 <div id="resultModal" class="modal">
     <div class="modal-content">
         <span class="close-btn">&times;</span>
-        <h3 id="modal-title">臨床分析</h3>
+        <h3 id="modal-title">分析結果</h3>
         <div id="recommendation-text"></div>
     </div>
 </div>
@@ -191,74 +214,39 @@
         if(parseInt(form.elements['q3'].value) >= 1) reasons.push("視野缺損");
         if(parseInt(form.elements['q9'].value) >= 2) reasons.push("嚴重失語");
         if(parseInt(form.elements['q11'].value) >= 1) reasons.push("忽略症狀");
-        if(['q5L','q6L'].some(n => parseInt(form.elements[n].value) >= 2)) reasons.push("肢體無法抗重力");
+        // 檢查四肢
+        if(['q5a','q5b','q6a','q6b'].some(n => parseInt(form.elements[n].value) >= 2)) {
+            reasons.push("肢體無法抗重力");
+        }
         return reasons;
     };
 
-    // UpToDate 處置分流
     document.getElementById('uptodate-btn').onclick = () => {
         const s = parseInt(scoreVal.textContent);
         const reasons = getDisablingReason();
-        title.innerText = "UpToDate 臨床處置建議";
-        let html = `<h4>分數：${s} 分</h4>`;
-
-        // 0-5 分區間
+        title.innerText = "UpToDate 臨床分析";
+        let html = `<h4>總分：${s} 分</h4>`;
         if(s <= 5) {
-            html += `<div class="rec-card disabling"><strong>核心考量：是否「致殘」</strong><br>`;
-            if(reasons.length > 0) {
-                html += `判定：<span style="color:red">可能致殘</span> (${reasons.join('、')})。<br>
-                         建議：儘速進入 IVT 與 EVT 評估。不可為觀察改善而延誤治療。`;
-            } else {
-                html += `判定：非致殘性。<br>建議：IVT 未必有益。考量短期 DAPT (症狀 72h 內啟動有效)。`;
-            }
-            html += `</div>`;
+            html += `<div class="rec-card disabling"><strong>核心判定：</strong>${reasons.length > 0 ? '具致殘缺損 ('+reasons.join('、')+')，應評估 IVT。' : '非致殘性，溶栓獲益未必大於風險。'} </div>`;
+        } else {
+            html += `<div class="rec-card treatment"><strong>中重度：</strong>符合非 Minor Stroke，應評估溶栓。</div>`;
         }
-
-        // >5 分區間
-        if(s > 5) {
-            html += `<div class="rec-card treatment"><strong>中重度 (Moderate-to-severe)</strong><br>
-                     建議：快速評估 IVT，同步評估前循環 LVO。若不做再灌流，建議 Aspirin 單用。</div>`;
-        }
-
-        // EVT 門檻
-        if(s >= 6) html += `<div class="rec-card"><strong>EVT 評估：</strong>NIHSS ≥ 6 為前循環近端 LVO 致殘缺損之常見門檻。</div>`;
-        if(s >= 10) html += `<div class="rec-card"><strong>後循環 EVT：</strong>NIHSS ≥ 10 為 Basilar LVO 之 EVT 建議門檻。</div>`;
-
         content.innerHTML = html;
         modal.style.display = "block";
     };
 
-    // 2025 台灣學會指引
     document.getElementById('taiwan-btn').onclick = () => {
         const s = parseInt(scoreVal.textContent);
         const reasons = getDisablingReason();
-        title.innerText = "2025 台灣腦中風學會指引";
-        let html = `<h4>分數：${s} 分</h4>`;
-
+        title.innerText = "2025 台灣指引建議";
+        let html = `<h4>總分：${s} 分</h4>`;
         if(s <= 5) {
-            if(reasons.length > 0) {
-                html += `<div class="rec-card treatment"><span class="badge badge-cor">COR IIa / LOE A</span><strong>輕微中風 (具失能)</strong><br>
-                         處置：4.5h 內積極 IVT。<br>藥物：Alteplase 或 TNK (0.25mg/kg)。</div>`;
-            } else {
-                html += `<div class="rec-card"><span class="badge badge-cor">COR IIa / LOE B-R</span><strong>輕微中風 (非失能)</strong><br>
-                         處置：優先最佳內科治療 (DAPT)。不常規建議溶栓。</div>`;
-            }
-        } else if (s <= 25) {
-            html += `<div class="rec-card treatment"><span class="badge badge-cor">COR I / LOE A</span><strong>中重度 (6-25分)</strong><br>
-                     1. 4.5h 內：強烈建議 IVT (Alteplase/TNK)。<br>
-                     2. 4.5-9h / 時間不明：影像證實 Penumbra (CTP/MRI) 可考慮。<br>
-                     3. 合併 LVO：儘速橋接 EVT，不可為取栓延遲溶栓。</div>`;
+            html += (reasons.length > 0) ? `<div class="rec-card treatment">建議 4.5h 內 IVT (Alteplase / TNK 0.25mg/kg)。</div>` : `<div class="rec-card">無致殘症狀，採最佳內科治療。</div>`;
+        } else if(s <= 25) {
+            html += `<div class="rec-card treatment">強烈建議 4.5h 內 IVT；LVO 應橋接 EVT。</div>`;
         } else {
-            html += `<div class="rec-card disabling"><strong>嚴重中風 (>25分)</strong><br>
-                     3h 內：建議 IVT <span class="badge badge-cor">COR I/A</span>。<br>
-                     3-4.5h：評估利弊後考慮 <span class="badge badge-cor">COR IIb/C</span>。<br>
-                     *前提：CT 顯示梗塞範圍 < 1/3 MCA。</div>`;
+            html += `<div class="rec-card disabling">嚴重中風 (>25)：3h內建議 IVT。*需 CT < 1/3 MCA。</div>`;
         }
-
-        html += `<div class="rec-card" style="background:#e8f5e9"><strong>藥物劑量參考：</strong><br>
-                 • Alteplase: 0.9 mg/kg (Max 90mg)<br>
-                 • Tenecteplase (TNK): 0.25 mg/kg (Max 25mg)</div>`;
-
         content.innerHTML = html;
         modal.style.display = "block";
     };
